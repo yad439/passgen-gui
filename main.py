@@ -54,6 +54,8 @@ def main():
 	pass_dialog = create_window('passwordDialog.ui')
 	pass_dialog.lineEdit.textEdited.connect(lambda pas: generate_check(pas, pass_dialog.checkLabel))
 	pass_dialog.exec()
+	if pass_dialog.result() != QDialog.Accepted:
+		return
 	password = pass_dialog.lineEdit.text()
 
 	pass_gen = PassGen(password)
