@@ -22,3 +22,7 @@ class PassGen:
 
 		result = subprocess.run(command, input=phrase, capture_output=True, text=True, check=True)
 		return result.stdout.strip()
+
+	def check_secret(self):
+		return subprocess.run([self.exe, '-i', '-c'], input=f'#{self.__secret}#', capture_output=True, text=True,
+		                      check=True).stdout.strip()
