@@ -19,7 +19,6 @@ class PassGen:
 		if entry.number is not None:
 			phrase += '%' + str(entry.number)
 		phrase += '~' + self.__secret
-		print(phrase)
 
-		result = subprocess.run(command, input=phrase, capture_output=True,text=True,check=True)
-		return result.stdout
+		result = subprocess.run(command, input=phrase, capture_output=True, text=True, check=True)
+		return result.stdout.strip()
