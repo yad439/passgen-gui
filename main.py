@@ -5,10 +5,10 @@ from pathlib import Path
 import pyperclip
 from PySide6.QtCore import QFile
 from PySide6.QtUiTools import QUiLoader
-from PySide6.QtWidgets import QApplication, QDialog, QTableWidget
+from PySide6.QtWidgets import QApplication, QDialog, QLabel, QTableWidget
 
-from entry import Entry
 from data_io import read_file, write_file
+from entry import Entry
 from passgen import PassGen
 from table_adapter import TableAdapter
 
@@ -43,10 +43,16 @@ def add_entry(table: TableAdapter):
 		table.add(entry)
 
 
+def generate_check(password: str, output: QLabel):
+	pass_gen = PassGen(password)
+	output.setText(pass_gen.check_secret())
+
+
 def main():
 	app = QApplication([])
 
 	pass_dialog = create_window('passwordDialog.ui')
+	pass_dialog.lineEdit.textEdited.connect(lambda pas: generate_check(pas, pass_dialog.checkLabel))
 	pass_dialog.exec()
 	password = pass_dialog.lineEdit.text()
 
