@@ -1,3 +1,4 @@
+import hashlib
 import os
 import sys
 from pathlib import Path
@@ -11,6 +12,8 @@ from data_io import read_file, write_file
 from entry import Entry
 from passgen import PassGen
 from table_adapter import TableAdapter
+
+SALT = b'\x89\x1c\x9eD\xe2\xfa\xd0!\x9d\xab\xb7\xfch\x0e\xd6\x1b\x96tg\xbe\x00\xa22J\xb2j\xcb\xe5JX_!'
 
 DATA_PATH = Path(__file__).resolve().parent / 'data.tsv'
 
@@ -44,8 +47,7 @@ def add_entry(table: TableAdapter):
 
 
 def generate_check(password: str, output: QLabel):
-	pass_gen = PassGen(password)
-	output.setText(pass_gen.check_secret())
+	output.setText(hashlib.pbkdf2_hmac('sha3-224', password.encode('utf-8'), SALT, 16384, 2).hex())
 
 
 def main():
