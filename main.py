@@ -1,7 +1,9 @@
 import hashlib
 import os
 import sys
+import time
 from pathlib import Path
+from threading import Thread
 
 import pyperclip
 from PySide6.QtCore import QFile
@@ -83,7 +85,14 @@ def main():
 		changed=True
 	window.removeButton.clicked.connect(remove_handler)
 
-	window.runButton.clicked.connect(lambda: pyperclip.copy(pass_gen.get_password(adapter.get_selected())))
+	def run_handler():
+		pyperclip.copy(pass_gen.get_password(adapter.get_selected()))
+		def clear_clipboard():
+			time.sleep(10)
+			pyperclip.copy('')
+		Thread(target=clear_clipboard).start()
+
+	window.runButton.clicked.connect(run_handler)
 
 	window.show()
 	status = app.exec_()
