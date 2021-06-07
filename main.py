@@ -69,16 +69,26 @@ def main():
 	if DATA_PATH.exists():
 		for entry in read_file(DATA_PATH):
 			adapter.add(entry)
+	changed=False
 
-	window.addButton.clicked.connect(lambda: add_entry(adapter))
+	def add_hadler():
+		nonlocal changed
+		add_entry(adapter)
+		changed=True
+	window.addButton.clicked.connect(add_hadler)
 
-	window.removeButton.clicked.connect(lambda: adapter.remove_selected())
+	def remove_handler():
+		nonlocal changed
+		adapter.remove_selected()
+		changed=True
+	window.removeButton.clicked.connect(remove_handler)
 
 	window.runButton.clicked.connect(lambda: pyperclip.copy(pass_gen.get_password(adapter.get_selected())))
 
 	window.show()
 	status = app.exec_()
-	write_file(DATA_PATH, adapter.get_all())
+	if changed:
+		write_file(DATA_PATH, adapter.get_all())
 	sys.exit(status)
 
 
